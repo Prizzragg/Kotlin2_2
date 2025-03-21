@@ -1,5 +1,5 @@
 fun main() {
-    calculate(200, cardType = "Visa")
+    calculate(10000, cardType = "Mastercard", lastTranslations = 70000)
 }
 
 fun calculate(transferAmount: Int, cardType: String = "Мир", lastTranslations: Int = 0) {
@@ -10,7 +10,12 @@ fun calculate(transferAmount: Int, cardType: String = "Мир", lastTranslations
         (transferAmount + lastTranslations > monthlyLimit) -> println("Превышен лимит по переводу в месяц!")
         (cardType == "Mastercard") -> {
             val limitMastercard = 75000
-            val commission = (if (transferAmount > 75000) transferAmount * 0.006 + 20 else 0).toInt()
+            var commission = 0
+            when {
+                (lastTranslations > limitMastercard) -> commission = (transferAmount * 0.006 + 20).toInt()
+                (transferAmount + lastTranslations > limitMastercard) -> commission =
+                    ((transferAmount + lastTranslations - limitMastercard) * 0.006 + 20).toInt()
+            }
             println("Для суммы перевода $transferAmount руб. комиссия составит $commission руб.")
         }
 
